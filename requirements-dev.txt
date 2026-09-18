@@ -1,0 +1,6 @@
+# coding/tdd/integration-tester 스킬이 요구하는 품질·시험 도구
+# 설치: python -m venv .venv 후 .venv 안에서 pip install -r requirements-dev.txt
+lizard        # 함수 라인수(NLOC)·순환복잡도(CCN) 측정 — coding 스킬
+pylint        # 중복코드·네이밍 검사 — coding 스킬
+radon         # 주석 비율(raw) 측정 — coding 스킬
+coverage      # branch coverage, 함수/콜 커버리지 산출 근거 — coding/integration-tester 스킬
