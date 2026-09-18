@@ -100,3 +100,42 @@ class DegradedResult:
     """
     isDegraded: bool
     staleFields: list = field(default_factory=list)
+
+
+class Door(Enum):
+    """!
+    @brief 정책 판정의 대상 도어. Side(운전자 명령용, ALL 포함)와 달리 정책 판정은 항상 도어 단위다.
+    """
+    LEFT = "left"
+    RIGHT = "right"
+
+
+@dataclass(frozen=True)
+class PolicyVote:
+    """!
+    @brief 정책모듈이 PriorityArbiter에 제출하는 투표. ENG-SWE3-002 5절 참고.
+    """
+    door: Door
+    action: Action
+    reasonCode: str
+    sourceAsil: str
+
+
+@dataclass(frozen=True)
+class DoorDecision:
+    """!
+    @brief 도어 하나에 대한 PriorityArbiter의 확정 결정(Phase 5에서 실제 생성).
+    """
+    action: Action
+    state: str
+    reasonCode: str
+    suppressedSinceTimestampS: Optional[float] = None
+
+
+@dataclass(frozen=True)
+class Decision:
+    """!
+    @brief PriorityArbiter의 출력이자, 다음 평가주기의 previousDecision 입력.
+    """
+    left: DoorDecision
+    right: DoorDecision
