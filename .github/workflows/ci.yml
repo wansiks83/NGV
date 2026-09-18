@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  unit-and-integration-tests:
+    name: unit-and-integration-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: 의존성 설치
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install coverage
+
+      - name: 단위/통합 테스트 실행 (branch coverage 100% 목표, CLAUDE.md 구현/테스트 지침)
+        run: |
+          if git ls-files '*.py' | grep -q .; then
+            coverage run --branch -m unittest discover -v
+            coverage report -m
+            coverage report --fail-under=100
+          else
+            echo "아직 Python 소스 파일이 없어 테스트 실행을 건너뜁니다."
+          fi
+
+  quality-metrics:
+    name: quality-metrics
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: 품질 측정 도구 설치
+        run: python -m pip install --upgrade pip lizard pylint radon
+
+      - name: 함수 라인수(≤50)·순환복잡도(≤10) 확인 (lizard, coding 스킬 기준)
+        run: |
+          if git ls-files '*.py' | grep -q .; then
+            lizard --CCN 10 --length 50 --warnings_only $(git ls-files '*.py')
+          else
+            echo "아직 Python 소스 파일이 없어 검사를 건너뜁니다."
+          fi
+
+      - name: 중복 코드 확인 (pylint, 8라인 이상 금지)
+        run: |
+          if git ls-files '*.py' | grep -q .; then
+            pylint --disable=all --enable=duplicate-code --min-similarity-lines=8 $(git ls-files '*.py')
+          else
+            echo "아직 Python 소스 파일이 없어 검사를 건너뜁니다."
+          fi
