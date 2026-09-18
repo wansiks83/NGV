@@ -75,19 +75,33 @@ def normalize(rawVehicle: Optional[dict], rawDriver: Optional[dict]) -> Normaliz
     @param rawDriver Driver->SW 원시 입력 dict(OEM-IF-004), 없으면 None.
     @return 모든 필드에 유효성 플래그가 포함된 NormalizedSnapshot. 예외를 던지지 않는다.
     """
+    vehicleSpeedKph = validatePresent(rawVehicle, "vehicle_speed_kph", validateRange, 0.0, 300.0)
+    gear = validatePresent(rawVehicle, "gear", validateEnum, Gear)
+    sourceTimestampS = validatePresent(rawVehicle, "source_timestamp_s", validateRange, 0.0, float("inf"))
+    crashStatus = validatePresent(rawVehicle, "crash_status", validateEnum, CrashStatus)
+    rearLeftApproachRisk = validatePresent(rawVehicle, "rear_left_approach_risk", validateBoolean)
+    rearRightApproachRisk = validatePresent(rawVehicle, "rear_right_approach_risk", validateBoolean)
+    fireDetected = validatePresent(rawVehicle, "fire_detected", validateBoolean)
+    overtemperatureDetected = validatePresent(rawVehicle, "overtemperature_detected", validateBoolean)
+    adultPresent = validatePresent(rawVehicle, "adult_present", validateBoolean)
+    isofixLeft = validatePresent(rawVehicle, "isofix_left", validateBoolean)
+    isofixRight = validatePresent(rawVehicle, "isofix_right", validateBoolean)
+    ignitionOn = validatePresent(rawVehicle, "ignition_on", validateBoolean)
+    sensorFault = validatePresent(rawVehicle, "sensor_fault", validateBoolean)
+    driverCommand = normalizeDriverCommand(rawDriver)
     return NormalizedSnapshot(
-        vehicleSpeedKph=validatePresent(rawVehicle, "vehicle_speed_kph", validateRange, 0.0, 300.0),
-        gear=validatePresent(rawVehicle, "gear", validateEnum, Gear),
-        sourceTimestampS=validatePresent(rawVehicle, "source_timestamp_s", validateRange, 0.0, float("inf")),
-        crashStatus=validatePresent(rawVehicle, "crash_status", validateEnum, CrashStatus),
-        rearLeftApproachRisk=validatePresent(rawVehicle, "rear_left_approach_risk", validateBoolean),
-        rearRightApproachRisk=validatePresent(rawVehicle, "rear_right_approach_risk", validateBoolean),
-        fireDetected=validatePresent(rawVehicle, "fire_detected", validateBoolean),
-        overtemperatureDetected=validatePresent(rawVehicle, "overtemperature_detected", validateBoolean),
-        adultPresent=validatePresent(rawVehicle, "adult_present", validateBoolean),
-        isofixLeft=validatePresent(rawVehicle, "isofix_left", validateBoolean),
-        isofixRight=validatePresent(rawVehicle, "isofix_right", validateBoolean),
-        ignitionOn=validatePresent(rawVehicle, "ignition_on", validateBoolean),
-        sensorFault=validatePresent(rawVehicle, "sensor_fault", validateBoolean),
-        driverCommand=normalizeDriverCommand(rawDriver),
+        vehicleSpeedKph=vehicleSpeedKph,
+        gear=gear,
+        sourceTimestampS=sourceTimestampS,
+        crashStatus=crashStatus,
+        rearLeftApproachRisk=rearLeftApproachRisk,
+        rearRightApproachRisk=rearRightApproachRisk,
+        fireDetected=fireDetected,
+        overtemperatureDetected=overtemperatureDetected,
+        adultPresent=adultPresent,
+        isofixLeft=isofixLeft,
+        isofixRight=isofixRight,
+        ignitionOn=ignitionOn,
+        sensorFault=sensorFault,
+        driverCommand=driverCommand,
     )
