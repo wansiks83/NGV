@@ -33,3 +33,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - 중복 코드는 7라인까지 허용한다.
   - 주석은 Doxygen방식으로 작성하며, 20%이상 작성해야 한다.
 - 함수변, 변수명은 3글자 이상 사용하고, 낙타 표기법을 활용한다.
+
+### 단위 테스트 지침
+
+- 단위 테스트는 TDD로 대체한다.
+- 단위테스트는 Branch 커버리지 100%를 달성해야 한다.
+- 테스트 성공율은 100% 여야 한다. 
+
+### 통합테스트 지침
+- 통합 테스트는 integration-tester 가 수행한다.
+- 테스트 성공율은 100% 여야한다.
+
+### 시스템 테스트 지침
+
+- 시스템 테스트는 sw-system-tester가 수행한다.
+- 테스트 성공율은 100% 여야한다.
