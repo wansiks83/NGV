@@ -8,23 +8,7 @@ from vjecl.degraded_state_manager import evaluate as evaluateDegraded
 from vjecl.input_gateway import normalize
 from vjecl.sensor_fault_gate import shouldHoldLastOutput
 
-VALID_VEHICLE = {
-    "vehicle_speed_kph": 10.0,
-    "gear": "D",
-    "source_timestamp_s": 100.0,
-    "crash_status": "NONE",
-    "rear_left_approach_risk": False,
-    "rear_right_approach_risk": False,
-    "fire_detected": False,
-    "overtemperature_detected": False,
-    "adult_present": False,
-    "isofix_left": False,
-    "isofix_right": False,
-    "ignition_on": True,
-    "sensor_fault": False,
-}
-
-VALID_DRIVER = {"side": "left", "action": "lock", "source": "physical_button"}
+from fixtures import VALID_DRIVER, VALID_VEHICLE
 
 
 def runFoundationPipeline(rawVehicle, rawDriver, previousTimestampS, currentTimestampS):
